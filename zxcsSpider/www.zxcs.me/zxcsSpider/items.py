@@ -18,3 +18,4 @@ class ZxcsspiderItem(scrapy.Item):
     download1 = scrapy.Field()
     download2 = scrapy.Field()
 
+
