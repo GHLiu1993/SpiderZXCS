@@ -16,7 +16,6 @@ import random
 
 class MyUserAgentMiddleware(UserAgentMiddleware):
 
-
     def __init__(self, user_agent):
         self.user_agent = user_agent
 

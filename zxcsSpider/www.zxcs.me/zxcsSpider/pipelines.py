@@ -5,17 +5,19 @@
 
 
 # useful for handling different item types with a single interface
-import json
 
+from openpyxl import Workbook
 class ZxcsspiderPipeline():
 
-
-
     def __init__(self):
-            self.f = open("zxcs.json","w")
+        self.wb = Workbook()
+        self.ws = self.wb.active
+        self.ws.append(['bookname', 'author', 'bookcode', 'booksize', 'bookmes', 'bookcate1','bookcate2','download1','download2'])  # 设置表头
+
+
     def process_item(self, item, spider):
-        content = json.dumps(dict(item),ensure_ascii = False)+"/n"
-        self.f.write(content)
+        line = [item['bookname'], item['author'], item['bookcode'], item['booksize'], item['bookmes'],
+                item['bookcate1'], item['bookcate2'], item['download1'],item['download2']]  # 把数据中每一项整理出来
+        self.ws.append(line)
+        self.wb.save('zxcs.xlsx')
         return item
-    def close_spider(self,spider):
-        self.f.close()
