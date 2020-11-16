@@ -4,11 +4,15 @@
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 # useful for handling different item types with a single interface
 
+from itemadapter import ItemAdapter
+import json
+from scrapy.exporters import CsvItemExporter
+from openpyxl import Workbook
 import pymysql
 
 class ZxcsspiderPipeline():
     def process_item(self, item, spider):
-        db = pymysql.connect(host="Localhost或数据库IP",user="Mysql数据库用户名",password="Mysql数据库密码",db="zxcs",charset="utf8")
+        db = pymysql.connect(host="数据库IP",user="数据库用户名",password="数据库密码",db="数据库名",charset="utf8")
         cursor = db.cursor()
 
         cursor.execute('insert into zxcsdb1(bookname,author,bookcode,booksize,bookmes,bookcate1,bookcate2,download1,download2)VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)',
@@ -21,3 +25,4 @@ class ZxcsspiderPipeline():
         db.close()
 
         return item
+

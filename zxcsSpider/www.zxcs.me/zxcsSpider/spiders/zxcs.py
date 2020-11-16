@@ -11,9 +11,9 @@ class ZxcsSpider(CrawlSpider):
     start_urls = ['http://www.zxcs.me/sort/23']
 
     rules = (
-        Rule(LinkExtractor(allow=r'http://www.zxcs.me/download.php?id=\d+'), callback='parse_item', follow=False),
-        Rule(LinkExtractor(allow=r'http://www.zxcs.me/post/\d+'), callback='parse_item',follow = False),
-        Rule(LinkExtractor(allow=r'http://www.zxcs.me/sort/\d+'), follow=False),
+        Rule(LinkExtractor(allow=r'http://www.zxcs.me/download.php?id=\d+'), callback='parse_item', follow=True),
+        Rule(LinkExtractor(allow=r'http://www.zxcs.me/post/\d+'), callback='parse_item',follow = True),
+        Rule(LinkExtractor(allow=r'http://www.zxcs.me/sort/\d+'), follow=True),
     )
 
     def parse_item(self, response):

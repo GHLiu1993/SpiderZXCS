@@ -5,33 +5,34 @@
 
 from scrapy import signals
 
-# useful for handling different item types with a single interface
 from itemadapter import is_item, ItemAdapter
 
 from scrapy import signals
-from scrapy.downloadermiddlewares.useragent import UserAgentMiddleware
-import random
+
+import requests,json
+import datetime
+from fake_useragent import UserAgent
 
 
 
-class MyUserAgentMiddleware(UserAgentMiddleware):
 
+class RandomUserAgentMiddlware(object):
 
-    def __init__(self, user_agent):
-        self.user_agent = user_agent
+    def __init__(self,crawler):
+        super(RandomUserAgentMiddlware,self).__init__()
+        self.ua = UserAgent()
+        self.ua_type = crawler.settings.get('RANDOM_UA_TYPE','random')
 
     @classmethod
-    def from_crawler(cls, crawler):
-        return cls(
-            user_agent=crawler.settings.get('MY_USER_AGENT')
-        )
+    def from_crawler(cls,crawler):
+        return cls(crawler)
 
-    def process_request(self, request, spider):
-        agent = random.choice(self.user_agent)
-        request.headers['User-Agent'] = agent
-
-
-
+    def process_request(self,request,spider):
+        def get_ua():
+            return getattr(self.ua,self.ua_type)
+        # user_agent_random=get_ua()
+        request.headers.setdefault('User_Agent',get_ua())
+        pass
 
 
 class ZxcsspiderSpiderMiddleware:
@@ -126,3 +127,26 @@ class ZxcsspiderDownloaderMiddleware:
 
     def spider_opened(self, spider):
         spider.logger.info('Spider opened: %s' % spider.name)
+
+class ZxcsspiderProxyIPDownloadMiddleware(object):
+    def __init__(self):
+        self.urlp = "代理IP的API"
+        self.proxy = ''
+        self.expire_datetime = datetime.datetime.now() - datetime.timedelta(minutes=2)
+        self._get_proxyip()
+
+    def _get_proxyip(self):
+        resp = requests.get(self.urlp)
+        info = json.loads(resp.text)
+        proxy = info[0]
+        # proxy = info['data'][0]
+        self.proxy = proxy['ip']
+        self.expire_datetime = datetime.datetime.now() + datetime.timedelta(minutes=2)
+
+    def _check_expire(self):
+        if datetime.datetime.now() >= self.expire_datetime:
+            self._get_proxyip()
+
+    def process_request(self,spider,request):
+        self._check_expire()
+        request.meta['proxyip'] ='http://' +  self.proxy
