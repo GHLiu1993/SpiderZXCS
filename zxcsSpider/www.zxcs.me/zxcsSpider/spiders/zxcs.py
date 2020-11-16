@@ -43,8 +43,8 @@ class ZxcsSpider(CrawlSpider):
             mes = bookmessage.xpath("./div[@id='content']/p[3]/text()").extract()
 
             uecd = " ".join([i.replace("\n","",) for i in mes])
-            uecd2 = uecd.replace(u'\xa0', u'')
-            bookmeslist = uecd2.replace(u'\u3000', u'')
+            uecd2 = uecd.replace(u'\xa0', u'')#爬取的文件一堆连七八糟的空字符，无法处理，存储前替换掉
+            bookmeslist = uecd2.replace(u'\u3000', u'')#爬取的文件一堆连七八糟的空字符，无法处理，存储前替换掉
             bookmeslist2 = re.findall(re4,bookmeslist)
             item['bookmes'] = bookmeslist2[0]
             item['bookcate1'] = bookmessage.xpath("./div[@id='ptop']/a[2]/text()").extract_first()

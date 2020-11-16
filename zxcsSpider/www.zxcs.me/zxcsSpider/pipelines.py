@@ -25,4 +25,3 @@ class ZxcsspiderPipeline():
         db.close()
 
         return item
-
