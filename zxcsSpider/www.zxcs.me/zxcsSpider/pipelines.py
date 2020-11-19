@@ -3,20 +3,23 @@
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 # useful for handling different item types with a single interface
-
-from itemadapter import ItemAdapter
-import json
-from scrapy.exporters import CsvItemExporter
-from openpyxl import Workbook
 import pymysql
 
 class ZxcsspiderPipeline():
     def process_item(self, item, spider):
-        db = pymysql.connect(host="数据库IP",user="数据库用户名",password="数据库密码",db="数据库名",charset="utf8")
+        db = pymysql.connect(host="数据库IP地址",user="数据库用户名",password="数据库密码",db="zxcs",charset="utf8")
         cursor = db.cursor()
 
-        cursor.execute('insert into zxcsdb1(bookname,author,bookcode,booksize,bookmes,bookcate1,bookcate2,download1,download2)VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)',
-                       (item['bookname'], item['author'], item['bookcode'], item['booksize'], item['bookmes'], item['bookcate1'], item['bookcate2'], item['download1'], item['download2']))
+        cursor.execute(
+                        'insert into zxcsAllBooks(书名,作者,编号,大小,简介,分类1,分类2,仙草,良草,干草,枯草,毒草,下载链接1,下载链接2)VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',
+                                   (
+                                    item['bookname'], item['author'], item['bookcode'],
+                                    item['booksize'], item['bookmes'], item['bookcate1'],
+                                    item['bookcate2'], item['Evaluation1'],item['Evaluation2'],
+                                    item['Evaluation3'],item['Evaluation4'],item['Evaluation5'],
+                                    item['download1'], item['download2']
+                                   )
+                       )
 
 
         db.commit()

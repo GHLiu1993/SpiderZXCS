@@ -29,7 +29,7 @@ class ZxcsspiderProxyIPDownloadMiddleware(object):
     def __init__(self):
         self.url = '代理IP的API'
         self.proxy = ''
-        self.expire_datetime = datetime.datetime.now() - datetime.timedelta(minutes=4)#每家IP代理的IP有效期不同，谨慎起见设置有效时长减一分钟
+        self.expire_datetime = datetime.datetime.now() - datetime.timedelta(minutes=4)
         self._get_proxyip()
 
     def _get_proxyip(self):
@@ -37,7 +37,7 @@ class ZxcsspiderProxyIPDownloadMiddleware(object):
         info = json.loads(resp.text)
         proxy = info['data'][0]
         self.proxy = proxy['ip']
-        self.expire_datetime = datetime.datetime.now() + datetime.timedelta(minutes=4)#每家IP代理的IP有效期不同，谨慎起见设置有效时长减一分钟
+        self.expire_datetime = datetime.datetime.now() + datetime.timedelta(minutes=4)
 
     def _check_expire(self):
         if datetime.datetime.now() >= self.expire_datetime:

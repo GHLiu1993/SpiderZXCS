@@ -13,6 +13,7 @@ SPIDER_MODULES = ['zxcsSpider.spiders']
 NEWSPIDER_MODULE = 'zxcsSpider.spiders'
 
 
+
 DOWNLOAD_DELAY = 1
 RANDOMIZE_DOWNLOAD_DELAY = True
 # The download delay setting will honor only one of:
@@ -33,9 +34,9 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable spider middlewares
 # See https://docs.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'zxcsSpider.middlewares.ZxcsspiderSpiderMiddleware': 543,
-#}
+# SPIDER_MIDDLEWARES = {
+#    'scrapy_splash.SplashDeduplicateArgsMiddleware': 543,
+# }
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
@@ -44,7 +45,6 @@ DOWNLOADER_MIDDLEWARES = {
    'scrapy.downloadermiddleware.useragent.UserAgentMiddleware': None,
    'zxcsSpider.middlewares.RandomUserAgentMiddlware': 400,
    'zxcsSpider.middlewares.ZxcsspiderProxyIPDownloadMiddleware': 750,
-
 
 }
 
@@ -81,4 +81,5 @@ ITEM_PIPELINES = {
 #HTTPCACHE_EXPIRATION_SECS = 0
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
-#HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+# DUPEFILTER_CLASS = 'scrapy_splash.SplashAwareDupeFilter'
+# HTTPCACHE_STORAGE = 'scrapy_splash.SplashAwareFSCacheStorage'

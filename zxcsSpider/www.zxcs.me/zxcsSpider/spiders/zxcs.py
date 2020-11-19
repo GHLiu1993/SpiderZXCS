@@ -3,6 +3,8 @@ from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
 from..items import ZxcsspiderItem
 import re
+import requests
+
 
 class ZxcsSpider(CrawlSpider):
 
@@ -10,11 +12,13 @@ class ZxcsSpider(CrawlSpider):
     allowed_domains = ['zxcs.me']
     start_urls = ['http://www.zxcs.me/sort/23']
 
+
     rules = (
         Rule(LinkExtractor(allow=r'http://www.zxcs.me/download.php?id=\d+'), callback='parse_item', follow=True),
         Rule(LinkExtractor(allow=r'http://www.zxcs.me/post/\d+'), callback='parse_item',follow = True),
         Rule(LinkExtractor(allow=r'http://www.zxcs.me/sort/\d+'), follow=True),
     )
+
 
     def parse_item(self, response):
         item = ZxcsspiderItem()
@@ -26,6 +30,7 @@ class ZxcsSpider(CrawlSpider):
             re2 = re.compile(r'作者：(.*)')
             re3 = re.compile(r'id=(.*)')
             re4 = re.compile(r'【内容简介】：(.*)')
+            Evaluation = ['Evaluation1','Evaluation2','Evaluation3','Evaluation4','Evaluation5']
             url3 = bookmessage.xpath("./div[@id='content']/div/div/p/a/@href").extract_first()
 
             namelists = bookmessage.xpath("./div[@id='content']/h1/text()").extract_first()
@@ -43,12 +48,17 @@ class ZxcsSpider(CrawlSpider):
             mes = bookmessage.xpath("./div[@id='content']/p[3]/text()").extract()
 
             uecd = " ".join([i.replace("\n","",) for i in mes])
-            uecd2 = uecd.replace(u'\xa0', u'')#爬取的文件一堆连七八糟的空字符，无法处理，存储前替换掉
-            bookmeslist = uecd2.replace(u'\u3000', u'')#爬取的文件一堆连七八糟的空字符，无法处理，存储前替换掉
+            uecd2 = uecd.replace(u'\xa0', u'')
+            bookmeslist = uecd2.replace(u'\u3000', u'')
             bookmeslist2 = re.findall(re4,bookmeslist)
             item['bookmes'] = bookmeslist2[0]
             item['bookcate1'] = bookmessage.xpath("./div[@id='ptop']/a[2]/text()").extract_first()
             item['bookcate2'] = bookmessage.xpath("./div[@id='ptop']/a[3]/text()").extract_first()
+
+            eva_html = requests.get("http://www.zxcs.me/content/plugins/cgz_xinqing/cgz_xinqing_action.php?action=mood&id="+ item['bookcode'])
+            temp = list(map(int, eva_html.text.split(',')))
+            for i in range(len(temp)):
+                item[Evaluation[i]] = temp[i]
 
             url3s = response.urljoin(url3)
             yield scrapy.Request(url=url3s,

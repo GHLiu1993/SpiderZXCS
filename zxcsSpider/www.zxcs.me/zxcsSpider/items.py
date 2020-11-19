@@ -14,7 +14,11 @@ class ZxcsspiderItem(scrapy.Item):
     bookmes = scrapy.Field()
     bookcate1 = scrapy.Field()
     bookcate2 = scrapy.Field()
-    # Evaluation = scrapy.Field()
+    Evaluation1 = scrapy.Field()
+    Evaluation2 = scrapy.Field()
+    Evaluation3 = scrapy.Field()
+    Evaluation4 = scrapy.Field()
+    Evaluation5 = scrapy.Field()
     download1 = scrapy.Field()
     download2 = scrapy.Field()
 
